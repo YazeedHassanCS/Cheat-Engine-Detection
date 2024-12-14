@@ -56,7 +56,7 @@ If you use this project in your software, games, or any other projects, the foll
    
 Failure to provide proper attribution and notification may result in a violation of the licensing terms.
 
-See the [LICENSE](LICENSE) file for complete terms.
+See the [LICENSE](LICENSE.md) file for complete terms.
 
 ## Contact
 For questions or support, contact **0Hikarix** on X.
