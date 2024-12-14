@@ -7,15 +7,15 @@
 #include <iostream>
 #include <iomanip> 
 
-    /*
-    * Cheat Engine Detection Using Signature scan
-    * This project detects Cheat Engine via signature scanning.
-    * This detection scans the process icon, which is often overlooked in bypass attempts.
-    * Pros: Fast and reliable; scans a consistent location, minimizing performance impact.
-    * Cons: May fail due to privilege issues; requires equal or higher privileges than Cheat Engine.
-    * Note: This check should not result in false positives, as it only scans the process's own icon.
-    * For questions, contact "0Hikarix" on x.
-    */
+/*
+* Cheat Engine Detection Using Signature scan
+* This project detects Cheat Engine via signature scanning.
+* This detection scans the process icon, which is often overlooked in bypass attempts.
+* Pros: Fast and reliable; scans a consistent location, minimizing performance impact.
+* Cons: May fail due to privilege issues; requires equal or higher privileges than Cheat Engine.
+* Note: This check should not result in false positives, as it only scans the process's own icon.
+* For questions, contact "0Hikarix" on x.
+*/
 
 
 
@@ -33,7 +33,10 @@ HICON GetProcessIcon(DWORD processId) {
 
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
     if (hProcess == NULL) {
-        std::cout << "cheat engine openprocess failed\n";
+        // the two lines below are for debug. if the detection isn't working this should tell why what it's scanning and why it's failing
+        // std::cout << "cheat engine openprocess failed\n";
+        // std::cout << processId << '\n';
+        //std::this_thread::sleep_for(std::chrono::milliseconds(3));
     }
     if (hProcess != NULL) {
         HMODULE hModules[1024];
@@ -44,7 +47,7 @@ HICON GetProcessIcon(DWORD processId) {
                 if (GetModuleFileNameEx(hProcess, hModules[i], szModule, sizeof(szModule) / sizeof(TCHAR))) {
                     hIcon = ExtractIcon(NULL, szModule, 0);
                     if (hIcon != NULL) {
-                        break; 
+                        break;
                     }
                 }
             }
@@ -66,7 +69,7 @@ std::vector<BYTE> BitmapToBytes(HBITMAP hBitmap) {
         if (GetBitmapBits(hBitmap, bufferSize, bytes.data()) == 0) {
             // Handle the case if GetIconInfo failed
             std::cout << "GetbitmapBits Failed\n";
-            bytes.clear(); 
+            bytes.clear();
         }
     }
 
@@ -176,8 +179,8 @@ int main() {
     while (true) {
         EnumrateProcesses();
         // However, it's unnecessary to run the check every millisecond, as it would significantly impact performance.
-        // To strike a balance, we run the check once every second.
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        // To strike a balance, we run the check 10 times every second.
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     return 0;
